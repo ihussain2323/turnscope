@@ -1,0 +1,8 @@
+[
+  {"id":"dispute","reference":"I need to dispute a card payment from yesterday.","target":"dispute"},
+  {"id":"freeze","reference":"Please freeze my card while I look for my wallet.","target":"freeze my card"},
+  {"id":"refund","reference":"The refund still shows as pending in my account.","target":"pending"},
+  {"id":"transfer","reference":"Can you cancel the transfer before it settles?","target":"cancel the transfer"},
+  {"id":"duplicate","reference":"My statement shows a duplicate charge for lunch.","target":"duplicate charge"},
+  {"id":"routing","reference":"Where can I find the routing number for my account?","target":"routing number"}
+]

@@ -1,0 +1,224 @@
+{
+  "model_sha256": "921e4cf8686fdd993dcd081a5da5b6c365bfde1162e72b08d75ac75289920b1f",
+  "conditions": [
+    {
+      "noise_rms_pcm16": 0,
+      "word_error_rate": 0.037,
+      "target_phrases_recovered": 6,
+      "cases": [
+        {
+          "id": "dispute",
+          "reference": "I need to dispute a card payment from yesterday.",
+          "hypothesis": "I need to dispute a card payment from yesterday.",
+          "target_phrase": "dispute",
+          "target_recovered": true,
+          "reference_words": 9,
+          "errors": 0,
+          "audio_seconds": 3.055,
+          "wall_seconds": 0.997
+        },
+        {
+          "id": "freeze",
+          "reference": "Please freeze my card while I look for my wallet.",
+          "hypothesis": "Please freeze my card while I look for my wallet.",
+          "target_phrase": "freeze my card",
+          "target_recovered": true,
+          "reference_words": 10,
+          "errors": 0,
+          "audio_seconds": 2.765,
+          "wall_seconds": 0.441
+        },
+        {
+          "id": "refund",
+          "reference": "The refund still shows as pending in my account.",
+          "hypothesis": "The riff on still shows as pending in my account.",
+          "target_phrase": "pending",
+          "target_recovered": true,
+          "reference_words": 9,
+          "errors": 2,
+          "audio_seconds": 3.175,
+          "wall_seconds": 0.44
+        },
+        {
+          "id": "transfer",
+          "reference": "Can you cancel the transfer before it settles?",
+          "hypothesis": "Can you cancel the transfer before it settles?",
+          "target_phrase": "cancel the transfer",
+          "target_recovered": true,
+          "reference_words": 8,
+          "errors": 0,
+          "audio_seconds": 3.225,
+          "wall_seconds": 0.451
+        },
+        {
+          "id": "duplicate",
+          "reference": "My statement shows a duplicate charge for lunch.",
+          "hypothesis": "My statement shows a duplicate charge for lunch.",
+          "target_phrase": "duplicate charge",
+          "target_recovered": true,
+          "reference_words": 8,
+          "errors": 0,
+          "audio_seconds": 3.025,
+          "wall_seconds": 0.504
+        },
+        {
+          "id": "routing",
+          "reference": "Where can I find the routing number for my account?",
+          "hypothesis": "Where can I find the routing number for my account?",
+          "target_phrase": "routing number",
+          "target_recovered": true,
+          "reference_words": 10,
+          "errors": 0,
+          "audio_seconds": 3.095,
+          "wall_seconds": 0.526
+        }
+      ]
+    },
+    {
+      "noise_rms_pcm16": 1200,
+      "word_error_rate": 0.3889,
+      "target_phrases_recovered": 2,
+      "cases": [
+        {
+          "id": "dispute",
+          "reference": "I need to dispute a card payment from yesterday.",
+          "hypothesis": "I need to destroy the part team from yesterday.",
+          "target_phrase": "dispute",
+          "target_recovered": false,
+          "reference_words": 9,
+          "errors": 4,
+          "audio_seconds": 3.055,
+          "wall_seconds": 0.538
+        },
+        {
+          "id": "freeze",
+          "reference": "Please freeze my card while I look for my wallet.",
+          "hypothesis": "Please, please, my cargo, I look for my wallet.",
+          "target_phrase": "freeze my card",
+          "target_recovered": false,
+          "reference_words": 10,
+          "errors": 3,
+          "audio_seconds": 2.765,
+          "wall_seconds": 0.57
+        },
+        {
+          "id": "refund",
+          "reference": "The refund still shows as pending in my account.",
+          "hypothesis": "There is some skill shows ascending in my account.",
+          "target_phrase": "pending",
+          "target_recovered": false,
+          "reference_words": 9,
+          "errors": 6,
+          "audio_seconds": 3.175,
+          "wall_seconds": 0.565
+        },
+        {
+          "id": "transfer",
+          "reference": "Can you cancel the transfer before it settles?",
+          "hypothesis": "And you can still have the chance for before it settles.",
+          "target_phrase": "cancel the transfer",
+          "target_recovered": false,
+          "reference_words": 8,
+          "errors": 6,
+          "audio_seconds": 3.225,
+          "wall_seconds": 0.58
+        },
+        {
+          "id": "duplicate",
+          "reference": "My statement shows a duplicate charge for lunch.",
+          "hypothesis": "My statement shows a duplicate charge for one.",
+          "target_phrase": "duplicate charge",
+          "target_recovered": true,
+          "reference_words": 8,
+          "errors": 1,
+          "audio_seconds": 3.025,
+          "wall_seconds": 0.569
+        },
+        {
+          "id": "routing",
+          "reference": "Where can I find the routing number for my account?",
+          "hypothesis": "Where can I find the routing number from my account?",
+          "target_phrase": "routing number",
+          "target_recovered": true,
+          "reference_words": 10,
+          "errors": 1,
+          "audio_seconds": 3.095,
+          "wall_seconds": 0.584
+        }
+      ]
+    },
+    {
+      "noise_rms_pcm16": 3600,
+      "word_error_rate": 0.9259,
+      "target_phrases_recovered": 0,
+      "cases": [
+        {
+          "id": "dispute",
+          "reference": "I need to dispute a card payment from yesterday.",
+          "hypothesis": "I'm used to this for the cartoon from yesterday",
+          "target_phrase": "dispute",
+          "target_recovered": false,
+          "reference_words": 9,
+          "errors": 6,
+          "audio_seconds": 3.055,
+          "wall_seconds": 0.633
+        },
+        {
+          "id": "freeze",
+          "reference": "Please freeze my card while I look for my wallet.",
+          "hypothesis": "Please, please, my father, I look for my life.",
+          "target_phrase": "freeze my card",
+          "target_recovered": false,
+          "reference_words": 10,
+          "errors": 4,
+          "audio_seconds": 2.765,
+          "wall_seconds": 0.58
+        },
+        {
+          "id": "refund",
+          "reference": "The refund still shows as pending in my account.",
+          "hypothesis": "There's some stuff over time in the night, huh?",
+          "target_phrase": "pending",
+          "target_recovered": false,
+          "reference_words": 9,
+          "errors": 9,
+          "audio_seconds": 3.175,
+          "wall_seconds": 0.573
+        },
+        {
+          "id": "transfer",
+          "reference": "Can you cancel the transfer before it settles?",
+          "hypothesis": "Only you can throw the plan first before it's settled.",
+          "target_phrase": "cancel the transfer",
+          "target_recovered": false,
+          "reference_words": 8,
+          "errors": 7,
+          "audio_seconds": 3.225,
+          "wall_seconds": 0.56
+        },
+        {
+          "id": "duplicate",
+          "reference": "My statement shows a duplicate charge for lunch.",
+          "hypothesis": "Nice, nice, nice, nice, nice, nice, nice, nice, nice, nice, nice, nice, nice, nice",
+          "target_phrase": "duplicate charge",
+          "target_recovered": false,
+          "reference_words": 8,
+          "errors": 14,
+          "audio_seconds": 3.025,
+          "wall_seconds": 1.218
+        },
+        {
+          "id": "routing",
+          "reference": "Where can I find the routing number for my account?",
+          "hypothesis": "First thing that I find better on a member tonight is not...",
+          "target_phrase": "routing number",
+          "target_recovered": false,
+          "reference_words": 10,
+          "errors": 10,
+          "audio_seconds": 3.095,
+          "wall_seconds": 0.681
+        }
+      ]
+    }
+  ]
+}

@@ -35,7 +35,8 @@ def analyze(caller, agent):
     for start, end in caller:
         while cursor < len(agent) and agent[cursor][1] <= start:
             cursor += 1
-        for a_start, a_end in agent[cursor:]:
+        for index in range(cursor, len(agent)):
+            a_start, a_end = agent[index]
             if a_start >= end:
                 break
             overlap = min(end, a_end) - max(start, a_start)
@@ -45,7 +46,7 @@ def analyze(caller, agent):
     for index, (start, end) in enumerate(caller):
         while cursor < len(agent) and agent[cursor][0] < end:
             cursor += 1
-        if any(a < end and b > end for a, b in agent[max(0, cursor-1):cursor]):
+        if cursor and agent[cursor - 1][1] > end:
             continue
         if cursor < len(agent) and (index + 1 == len(caller) or agent[cursor][0] < caller[index+1][0]):
             rows.append(dict(event='response_gap', start_ms=end, duration_ms=agent[cursor][0] - end))
