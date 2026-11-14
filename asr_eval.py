@@ -1,4 +1,4 @@
-"""Run an offline Whisper evaluation on synthetic payment-support utterances."""
+"""Run an offline speech recognition evaluation on synthetic payment-support utterances."""
 import argparse
 from array import array
 import hashlib
@@ -51,9 +51,41 @@ def prepare(source, target, noise_rms):
     return len(pcm) / 16000
 
 
-def score(cli, model):
+def whisper_decoder(cli, model):
+    def decode(audio, prefix):
+        subprocess.run([cli, '-m', str(model), '-f', str(audio), '-l', 'en', '-t', '2',
+                        '-otxt', '-of', str(prefix), '-nt', '-ng'], check=True,
+                       stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+        return prefix.with_suffix('.txt').read_text().strip()
+
+    return decode, {'model_sha256': hashlib.sha256(model.read_bytes()).hexdigest()}
+
+
+def parakeet_decoder(model):
+    import numpy as np
+    import sherpa_onnx
+
+    files = {name: model / (name + '.int8.onnx') for name in ('encoder', 'decoder', 'joiner')}
+    files['tokens'] = model / 'tokens.txt'
+    recognizer = sherpa_onnx.OfflineRecognizer.from_transducer(
+        **{key: str(path) for key, path in files.items()}, model_type='nemo_transducer',
+        feature_dim=128, num_threads=2)
+
+    def decode(audio, prefix):
+        with wave.open(str(audio), 'rb') as source:
+            samples = np.frombuffer(source.readframes(source.getnframes()), '<i2').astype(np.float32)
+        stream = recognizer.create_stream()
+        stream.accept_waveform(16000, samples / 32768)
+        recognizer.decode_stream(stream)
+        return stream.result.text.strip()
+
+    hashes = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in files.values()}
+    return decode, {'model': 'NVIDIA Parakeet TDT 0.6B v3', 'file_sha256': hashes}
+
+
+def score(decode, metadata):
     cases = json.loads((ROOT / 'speech/cases.json').read_text())
-    report = {'model_sha256': hashlib.sha256(model.read_bytes()).hexdigest(), 'conditions': []}
+    report = {**metadata, 'conditions': []}
     with tempfile.TemporaryDirectory() as directory:
         audio = Path(directory) / 'input.wav'
         prefix = Path(directory) / 'transcript'
@@ -62,11 +94,8 @@ def score(cli, model):
             for case in cases:
                 seconds = prepare(ROOT / 'speech' / (case['id'] + '.wav'), audio, noise)
                 start = time.perf_counter()
-                subprocess.run([cli, '-m', str(model), '-f', str(audio), '-l', 'en', '-t', '2',
-                                '-otxt', '-of', str(prefix), '-nt', '-ng'], check=True,
-                               stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+                hypothesis = decode(audio, prefix)
                 elapsed = time.perf_counter() - start
-                hypothesis = prefix.with_suffix('.txt').read_text().strip()
                 reference, decoded = tokens(case['reference']), tokens(hypothesis)
                 rows.append(dict(id=case['id'], reference=case['reference'], hypothesis=hypothesis,
                                  target_phrase=case['target'], target_recovered=has_phrase(decoded, tokens(case['target'])),
@@ -80,11 +109,13 @@ def score(cli, model):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--engine', choices=('whisper', 'parakeet'), default='whisper')
     parser.add_argument('--cli', default='whisper-cli')
     parser.add_argument('--model', type=Path, required=True)
     args = parser.parse_args()
     try:
-        print(json.dumps(score(args.cli, args.model), indent=2))
+        decoder = parakeet_decoder(args.model) if args.engine == 'parakeet' else whisper_decoder(args.cli, args.model)
+        print(json.dumps(score(*decoder), indent=2))
     except subprocess.CalledProcessError as exc:
         parser.exit(2, exc.stderr.decode(errors='replace')[-2000:] + '\n')
     except (OSError, ValueError, wave.Error) as exc:

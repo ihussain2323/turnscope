@@ -29,17 +29,27 @@ Channel order determines who interrupted whom. Crosstalk, hold music and noisy c
 
 ## Can the recognizer still hear the payment instruction?
 
-This second experiment runs local Whisper inference on six original payment-support prompts. Listen to a [clean input](speech/dispute.wav), then inspect the [transcripts and scores](measurements/tiny-en.json). On the clean dispute clip, tiny.en recovered “I need to dispute a card payment from yesterday.” Adding deterministic noise at 1,200 RMS changed the decoded phrase to “I need to destroy the part team from yesterday.”
+This experiment compares NVIDIA Parakeet TDT 0.6B v3 and Whisper tiny.en on identical audio from six original payment-support prompts. Listen to a [clean input](speech/dispute.wav), then inspect the [transcripts and scores](measurements/tiny-en.json). On the clean dispute clip, tiny.en recovered “I need to dispute a card payment from yesterday.” Adding deterministic noise at 1,200 RMS changed the decoded phrase to “I need to destroy the part team from yesterday.”
 
-| Added noise RMS (16-bit PCM units) | Word error rate | Target phrases recovered |
-| ---: | ---: | ---: |
-| 0 | 3.70% | 6/6 |
-| 1,200 | 38.89% | 2/6 |
-| 3,600 | 92.59% | 0/6 |
+| Added noise RMS (PCM16 units) | Parakeet v3 word error rate | Whisper tiny.en word error rate | Exact phrases, Parakeet / Whisper |
+| ---: | ---: | ---: | ---: |
+| 0 | 1.85% | 3.70% | 6 / 6 |
+| 1,200 | 31.48% | 38.89% | 1 / 2 |
+| 3,600 | 70.37% | 92.59% | 0 / 0 |
+
+Each phrase column counts successes out of six. At the middle noise level, Parakeet had fewer word errors overall but lost one more target phrase. Inspect each decoded utterance in the [Parakeet report](measurements/parakeet-v3.json) and [Whisper report](measurements/tiny-en.json).
 
 The corpus spans 54 reference words from one synthetic voice. These measurements characterize this fixture and model only. Word error rate sums word-level edit distances across clips and divides by total reference words. Phrase recovery checks a literal contiguous token match after lowercasing and stripping punctuation. It measures exact wording, so semantically equivalent paraphrases can fail.
 
-To rerun, build [whisper.cpp v1.8.2](https://github.com/ggml-org/whisper.cpp/tree/v1.8.2), fetch its `tiny.en` GGML model, then run:
+To reproduce Parakeet, install `sherpa-onnx==2.0.1` and `numpy==2.5.4` with Python 3.13. Extract the [int8 model archive](https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2) and run:
+
+```sh
+python3 asr_eval.py --engine parakeet --model sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8
+```
+
+Parakeet loads once per run. Its per-clip times exclude model loading. Whisper launches a new process for each clip, so the timing fields measure different workloads. Model attribution and licensing are in the [NVIDIA model card](https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3).
+
+To reproduce Whisper, build [whisper.cpp v1.8.2](https://github.com/ggml-org/whisper.cpp/tree/v1.8.2), fetch its `tiny.en` GGML model, then run:
 
 ```sh
 python3 asr_eval.py --cli /path/to/whisper-cli --model /path/to/ggml-tiny.en.bin
